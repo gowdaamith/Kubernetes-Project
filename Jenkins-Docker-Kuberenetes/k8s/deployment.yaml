@@ -1,0 +1,44 @@
+apiVersion: app/v1
+kind: Deployment
+metadata:
+  name: python-app-deployment 
+  lables:
+    app: python-app
+
+spec:
+  replicas: 2
+  selector: 
+    matchLabels: 
+      app: python-app
+  template:
+    metadata:
+      labels:
+        app: python-app
+    spec:
+      container: 
+        - name: python-app-container
+          image: gowdaamith/python-app:latest
+          port: 
+            - containerPort: 5000
+          resources: 
+            limits: 
+              cpu: "200m"
+              memory: "256Mi"
+            request:
+              cpu: "100m"
+              memory: "128Mi"
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 5000
+            initialDeplySecond: 5
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 5000
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            
+            
+              
