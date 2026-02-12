@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata: 
+  name: python-app-Ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+
+spec: 
+  rules:
+    - host: python-app.local  # Domain name use in the browser
+      http: 
+        paths: 
+          - path: /
+            pathType: Prefix
+            backend:
+              Service:
+                name: python-services  # the kubernetes service receiving the traffic
+                port:
+                  number: 80           # the service port ingress forward to 
+
+
+              
+                  
