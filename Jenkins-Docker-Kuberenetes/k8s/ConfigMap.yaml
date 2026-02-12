@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata: 
+  name: python-app-ConfigMap
+data: 
+  APP_NAME: "myapp"
+  LOG_LEVEL: "info"
+  DATABASE_HOST: "mydb-service"
