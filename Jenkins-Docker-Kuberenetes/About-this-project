@@ -1,0 +1,21 @@
+A full pipeline that build's docker image -> pushes to registry -> deploy to kubernetess
+
+Components:
+*Simple Node.js / python app
+*Dockerfile
+*Jenkins pipeline(Declarative ro scripted)
+*Kubernetes Deployment + Services
+*Rolling Updatess on every code change
+
+What we will be learning here:
+*Shows CI/CD + K8s integration 
+
+Project: CI/CD Pipeline  using Jenkins  + Kubernetes
+
+Build a pipelline that : 
+1.Pull source code from Github
+2.Build a Docker image
+3.Pushes it to DockerHub
+4.Deploy to kubernetes (Minikube)
+5.Does Rolling updates automatically 
+
