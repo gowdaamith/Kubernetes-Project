@@ -1,0 +1,79 @@
+3 MicroService + Ingress + ConfigMaps + Secrets + Probes + HPA
+
+Here we will be using the node.js app 
+
+              ┌─────────────────────────────┐
+              │      Ingress Controller      │
+              └───────────────┬─────────────┘
+                              │
+     ┌────────────────────────┼────────────────────────┐
+     │                        │                        │
+┌──────────┐            ┌──────────┐            ┌──────────┐
+│  Auth    │            │ Backend  │            │ Frontend │
+│ Service  │            │ Service  │            │ Service  │
+└──────────┘            └──────────┘            └──────────┘
+     │                        │                        │
+     └───────────► ConfigMaps / Secrets ◄──────────────┘
+
+
+
+Service to Build : 
+1.Auth Service
+*/login 
+*/register
+*No database neeeeeeeeeeded just for trial
+
+2.Backend API Service
+*/products
+*/order
+*Talks to the Auth service interanlly 
+*Uses configMap for Settings
+
+3.Frontend Service
+*Simple Express app serving HTML 
+*call backend API 
+
+How its going to work :
+
+User -> Ingress controller -> Ingress rules  -> Services -> Pod -> Internal Services
+
+What happens when a USER  requset a data : 
+Example: 
+------------------------------------------------------
+
+User opens : 
+>> https://yourapp.com/products
+Here is a exact seqence of events 
+
+Step 1:  User sends request from brower
+--------------------------------------
+>> yourapp.com/products
+
+DNS resolves: 
+>> yourapp.com -> Nodeip -> ingresscontroller 
+The nodeIp belongs to the machine where the ingress controller Pod is running
+The domain is not pointing to your app ,the domain is pointing to the entry gate 
+
+This Node has: 
+*A running ingress controller Pod (Like nginx ingress controller)
+*A DaemonSet or Deployment exposing ports 80 and 443 on the node 
+*This node forwards traffic to the Ingress controller  
+*Ingress controller checks your ingress rules and for the traffic 
+
+
+
+So the first component that receives the request inside kubernetes is :Ingresss controller
+
+Step 2: Ingress controller checks routing rules
+---------------------------------------------------
+Your ingress.yaml contians routing rules:
+
+YAML: 
+
+paths: 
+  - path: /products
+    backend: 
+      service: 
+        name: backend-sevice
+        port: 
+          number: 3002
