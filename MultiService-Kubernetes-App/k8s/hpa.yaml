@@ -1,0 +1,36 @@
+apiVersion: autoScaling/v2
+kind: HorizontalPodAutoscaler 
+metadata: 
+  name: node-api-app-hpa
+  namespace: node-api-app
+spec: 
+  scaleTargetRef: 
+    apiVersion: app/v1
+    kind: Deployment
+    name: node-api-app
+  minReplicas:  2
+  maxReplicas: 6
+  metrics: 
+    -type: Resource
+     resource:
+       name: cpu
+       target: 
+         type: Utilization
+         averageUtilization: 60
+    behaviour: 
+      scaleUp: 
+        stabilizationWindowSeconds: 0 # No delay in scaling up 
+        policies: 
+        - type: Percent                # Scale-up based on the percentage of the current pod
+          value: 50                    # Can add upto most 50 percent of currnet pods in one scaling event 
+          periodSecond: 30             # scaling chages applied at most once every 30 seconds 
+      scaleDown: 
+        stabilizationWindowSeconds: 300   # wait for  5 minutes before considering previous scale-down 
+        policies:                         
+          - type: Percent                 # Scale down based on the percentage of current pods
+             value: 10                    #  Can remove at most 10 % of current pods per period 
+            periodSeconds: 60             # Apply this scaling at most once every 60 seconds
+          - type: Pods                    # Scaledown olicy basaed no fixed nubmer of pods 
+             value: 2                     # can remove atmost  2 pods per period 
+            periodSeconds: 60             # apply thsi scaling at most once every 60 second 
+        selectPolicy: Min                  # when multiple scale-down policies applies pick the smallest one 
