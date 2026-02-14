@@ -7,6 +7,6 @@ spec:
   selector:
     app: node-api
   ports: 
-  - port: 80
-    targetPort: 3000
+  - port: 80                            #service port
+    targetPort: 3000                    #pod port 
   type: ClusterIP
