@@ -35,7 +35,7 @@ RUN chown  -R appuser:appgroup /app
 USER appuser
 
 #Expose only the required part
-EXPOSE 3000
+EXPOSE 3001
 
 #HealthChecks  for kubernetes
 HEALTHCHECK --interval=30s --timeout=5s \
