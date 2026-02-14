@@ -34,7 +34,7 @@ RUN chown -R appuser:appgroup /app
 USER appuser
 
 # Expose only required port
-EXPOSE 3000
+EXPOSE 3002
 
 # HEALTHCHECK for Kubernetes
 HEALTHCHECK --interval=30s --timeout=5s \
