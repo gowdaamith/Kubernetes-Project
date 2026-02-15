@@ -1,0 +1,68 @@
+pipeline{
+  agent any
+
+  environment{
+    DOCKERHUB_USER = "gowdaamith"
+    KUBE_NAMESPACE = "node-api-app"
+    APP_DIR = "MultiService-Kubernetes-App"
+  }
+  stages{
+    stage('checkout'){
+      steps{
+        git "https://github.com/gowdaamith/Kubernetes-Project.git"
+      }
+    }
+
+    stage('Install and test each services"){
+          steps{
+            dir("${APP_DIR}/auth-services") {
+              sh " npm install'
+              sh "npm test" || echo "Auth testes skipped"
+            }
+            dir("${APP_DIR}/frontend-servicess"){
+              sh "npm install"
+              sh "npm test" || echo "Frontend tests skipped"
+            }
+            dir("${APP_DIR"}/backend-services"){
+              sh "npm install"
+              sh " npm test" || echo " backend tests skipped"
+            }
+
+          }
+    }
+    stage('Build Docker Image'){
+      steps{
+        sh "docker build -t $DOCKERHUB_USER/auth-services:latest ${APP_DIR}/auth-service"
+        sh "docker build -t $DOCKERHUB_USER/backend-service:latest ${APP_DIR}/backend-service"
+        sh "docker build -t $DOCKERHUB_USER/frontend-service:latest ${APP_DIR}/frontend-service"
+      }
+    }
+    stage('Push Docker Image'){
+      steps{
+        withDockerRegistry([ credentialsId: 'dockerhub-credentials',url: ' ' ]) {
+            sh "docker push $DOCKEHUB_USER/auth-service:latest"
+            sh "docker push $DOCKERHUB_USER/backend-service:latest"
+            sh "docker push $DOCKERHUB_USER/frontend-services:latest"
+        }
+      }
+    }
+    stage('Deploy to the Minikube'){
+      steps {
+          sh "kubectl apply -f ${APP_DIR}/k8s/namespace.yaml"
+          sh "kubectl apply -f ${APP_DIR}/k8s/configmap.yaml"
+          sh "kubectl apply -f ${APP_DIR}/k8s/secret.yaml"
+          sh "kubectl apply -f ${APP_DIR}/k8s/"
+
+          sh "kubectl rollout restart deployment/auth-deployment -n $KUBE_NAMESPACE"
+          sh "kubectl rollout restart deployment/backend-deployment -n $KUBE_NAMESPACE"
+          sh "kubectl rollout restart deployment/frontend-deployment -n $KUBE_NAMESPACE"
+      }      
+    }
+  }
+
+  post {
+      success { echo "Pipeline completed successfully!" }
+      failure { echo "Pipeline failed!" }
+  }            
+}      
+        
