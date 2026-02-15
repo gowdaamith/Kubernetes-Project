@@ -1,0 +1,11 @@
+apiVersion: app/v1
+kind: Service
+metadata: 
+  name: mongo-svc
+  metadata: stateful-app
+spec:
+  clusterIP: None
+  selector: 
+    app: mongo
+  ports:
+    - port: 27017
