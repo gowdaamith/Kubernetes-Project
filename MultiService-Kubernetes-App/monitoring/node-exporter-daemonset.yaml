@@ -21,3 +21,7 @@ spec:
           - containerPort: 9100
             hostPort: 9100
             
+# Node exporter is a smallll prometheus  agent that runs on every kubernetes node to collect system level metrics
+# it exposes metrics on port: 9100 and prometheus scrapes them 
+# It collects info like CPU usage ,Memory usage, Disk usage, Filesystem info ,Network traffic , Load average,Hardware information ,system uptime 
+# it tell prometheus the health  and performance of each node in your cluster   
