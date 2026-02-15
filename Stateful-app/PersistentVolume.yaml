@@ -1,0 +1,14 @@
+apiVersion: app/v1
+kind: PersistentVolume
+metadata:
+  name: mongo0pv
+spec:
+  capacity: 1Gi
+accessModes: 
+  - ReadWriteOnce
+storageClassName: gp3-sc
+resources:
+  requests: 
+    storage: 10Gi
+
+    
