@@ -1,0 +1,21 @@
+apiVersion: batch/v1
+kind: Job
+metadata: 
+  name: mongo-backup 
+  namespace: stateful-app
+spec: 
+  template: 
+    spec: 
+      containers:
+        - name: backup
+          image: mongo:6.0
+          command: ["mongodump","--out=/backup"]
+          volumeMounts: 
+            - name: backup-vol
+              mountPath: /backup
+      restartPolicy: Never
+      volumes:
+        - name: backup-vol
+          hostpath: 
+              path: /data/backup
+              
